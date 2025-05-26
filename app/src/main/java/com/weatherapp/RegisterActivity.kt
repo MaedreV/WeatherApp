@@ -32,6 +32,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.weatherapp.ui.theme.DataField
+import com.weatherapp.ui.theme.PasswordField
 import com.weatherapp.ui.theme.WeatherAppTheme
 
 class RegisterActivity : ComponentActivity() {
@@ -66,32 +68,26 @@ fun RegisterPage(modifier: Modifier = Modifier) {
             text = "Cadastro",
             fontSize = 24.sp
         )
-        OutlinedTextField(
+        DataField(
             value = user,
-            label = { Text(text = "Digite seu nome de usuario") },
-            modifier = modifier.fillMaxWidth(fraction = 0.9f),
-            onValueChange = { user = it }
+            onValueChange = { user = it },
+            labelText = "Digite seu nome de usuario"
         )
-        OutlinedTextField(
+        DataField(
             value = email,
-            label = { Text(text = "Digite seu e-mail") },
-            modifier = modifier.fillMaxWidth(fraction = 0.9f),
-            onValueChange = { email = it }
+            onValueChange = { email = it },
+            labelText = "Digite seu e-mail"
         )
 
-        OutlinedTextField(
+        PasswordField(
             value = password,
-            label = { Text(text = "Digite sua senha") },
-            modifier = modifier.fillMaxWidth(fraction = 0.9f),
             onValueChange = { password = it },
-            visualTransformation = PasswordVisualTransformation()
+            labelText = "Digite sua senha"
         )
-        OutlinedTextField(
+        PasswordField(
             value = repeatPassword,
-            label = { Text(text = "Digite sua senha novamente") },
-            modifier = modifier.fillMaxWidth(fraction = 0.9f),
             onValueChange = { repeatPassword = it },
-            visualTransformation = PasswordVisualTransformation()
+            labelText = "Digite sua senha novamente"
         )
         Row(modifier = modifier) {
             Button(
