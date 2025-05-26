@@ -34,15 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.weatherapp.ui.theme.WeatherAppTheme
 
-class LoginActivity : ComponentActivity() {
+class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             WeatherAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding -> LoginPage(
-                    modifier = Modifier.padding(innerPadding)
-                )
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding -> RegisterPage(
+                        modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -51,9 +50,12 @@ class LoginActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun LoginPage(modifier: Modifier = Modifier) {
+fun RegisterPage(modifier: Modifier = Modifier) {
+    var user by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("")}
+    var repeatPassword by rememberSaveable { mutableStateOf("") }
+
     val activity = LocalContext.current as? Activity
     Column(
         modifier = modifier.padding(16.dp).fillMaxSize(),
@@ -61,16 +63,22 @@ fun LoginPage(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Bem-vindo(a)!",
+            text = "Cadastro",
             fontSize = 24.sp
         )
-        Spacer(modifier = modifier.size(24.dp))
+        OutlinedTextField(
+            value = user,
+            label = { Text(text = "Digite seu nome de usuario") },
+            modifier = modifier.fillMaxWidth(fraction = 0.9f),
+            onValueChange = { user = it }
+        )
         OutlinedTextField(
             value = email,
             label = { Text(text = "Digite seu e-mail") },
             modifier = modifier.fillMaxWidth(fraction = 0.9f),
             onValueChange = { email = it }
         )
+
         OutlinedTextField(
             value = password,
             label = { Text(text = "Digite sua senha") },
@@ -78,44 +86,32 @@ fun LoginPage(modifier: Modifier = Modifier) {
             onValueChange = { password = it },
             visualTransformation = PasswordVisualTransformation()
         )
-        Spacer(modifier = modifier.size(24.dp))
+        OutlinedTextField(
+            value = repeatPassword,
+            label = { Text(text = "Digite sua senha novamente") },
+            modifier = modifier.fillMaxWidth(fraction = 0.9f),
+            onValueChange = { repeatPassword = it },
+            visualTransformation = PasswordVisualTransformation()
+        )
         Row(modifier = modifier) {
             Button(
                 onClick = {
 
-                    Toast.makeText(activity, "Login OK!", Toast.LENGTH_LONG).show()
-                    activity?.startActivity(
-                        Intent(activity, MainActivity::class.java).setFlags(
-                            FLAG_ACTIVITY_SINGLE_TOP
-                        )
-                    )
-                }
-                      ,  enabled = email.isNotEmpty() && password.isNotEmpty()
-            ) {
-                Text("Login")
-            }
-            Spacer(modifier = modifier.size(24.dp))
+                    Toast.makeText(activity, "Cadastro feito com sucesso!", Toast.LENGTH_LONG).show()
+                    activity?.finish()
 
-            Button(
-                onClick = {
-                    activity?.startActivity(
-                        Intent(activity, RegisterActivity::class.java).setFlags(
-                            FLAG_ACTIVITY_SINGLE_TOP
-                        )
-                    )
+
                 }
-            ) {
+                      ,  enabled = user.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && repeatPassword.isNotEmpty() && password == repeatPassword            ) {
                 Text("Cadastro")
             }
             Spacer(modifier = modifier.size(24.dp))
             Button(
-                onClick = { email = ""; password = "" }
+                onClick = { user = ""; email = ""; password = ""; repeatPassword = "" }
+
             ) {
                 Text("Limpar")
             }
         }
     }
 }
-
-
-
