@@ -19,6 +19,6 @@ class MainViewModel : ViewModel() {
 }
 
 
-    private fun getCities() = List(20) { i ->
+    private fun getCities() = List(7) { i ->
         City(name = "Cidade $i", weather = "Carregando clima...")
     }
