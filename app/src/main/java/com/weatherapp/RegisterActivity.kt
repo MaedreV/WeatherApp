@@ -38,6 +38,14 @@ import com.weatherapp.ui.theme.DataField
 import com.weatherapp.ui.theme.PasswordField
 import com.weatherapp.ui.theme.WeatherAppTheme
 
+import com.weatherapp.df.fb.FBDatabase
+import com.weatherapp.df.fb.toFBUser
+import com.weatherapp.model.User
+
+
+
+
+
 
 class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +64,7 @@ class RegisterActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun RegisterPage(modifier: Modifier = Modifier) {
-    var user by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("")}
     var repeatPassword by rememberSaveable { mutableStateOf("") }
@@ -72,9 +80,9 @@ fun RegisterPage(modifier: Modifier = Modifier) {
             fontSize = 24.sp
         )
         DataField(
-            value = user,
-            onValueChange = { user = it },
-            labelText = "Digite seu nome de usuario"
+            value = name,
+            onValueChange = { name = it },
+            labelText = "Digite seu nome "
         )
         DataField(
             value = email,
@@ -100,6 +108,10 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                             if (task.isSuccessful) {
                                 Toast.makeText(activity,
                                     "Registro OK!", Toast.LENGTH_LONG).show()
+                                FBDatabase().register(User(name, email).toFBUser())
+
+
+
 
 
 
@@ -109,12 +121,12 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                             }
                         }
                 }
-                      ,  enabled = user.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && repeatPassword.isNotEmpty() && password == repeatPassword            ) {
+                      ,  enabled = name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && repeatPassword.isNotEmpty() && password == repeatPassword            ) {
                 Text("Cadastro")
             }
             Spacer(modifier = modifier.size(24.dp))
             Button(
-                onClick = { user = ""; email = ""; password = ""; repeatPassword = "" }
+                onClick = { name = ""; email = ""; password = ""; repeatPassword = "" }
 
             ) {
                 Text("Limpar")
