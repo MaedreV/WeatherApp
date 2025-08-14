@@ -39,7 +39,7 @@ import com.weatherapp.ui.theme.WeatherAppTheme
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.LaunchedEffect
 import com.weatherapp.MainViewModel
-
+import com.weatherapp.ui.nav.Route
 
 
 @Composable
@@ -62,8 +62,10 @@ fun ListPage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
                 viewModel.remove(city) //teste
                 Toast.makeText(activity, "Cidade removida: ${city.name}", Toast.LENGTH_SHORT).show()
             }, onClick = {
-                /* TO DO */
+
                 viewModel.city = city
+                viewModel.page = Route.Home
+
             })
         }
     }
