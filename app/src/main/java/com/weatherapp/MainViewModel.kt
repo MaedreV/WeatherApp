@@ -1,11 +1,13 @@
 package com.weatherapp
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.model.LatLng
 import com.weatherapp.api.WeatherService
+import com.weatherapp.api.toWeather
 import com.weatherapp.df.fb.FBCity
 import com.weatherapp.df.fb.FBDatabase
 import com.weatherapp.df.fb.FBUser
@@ -17,9 +19,9 @@ import com.weatherapp.model.User
 class MainViewModel (private val db: FBDatabase,
                      private val service : WeatherService
 ): ViewModel(), FBDatabase.Listener  {
-    private val _cities = mutableStateListOf<City>()
-    val cities
-        get() = _cities.toList()
+    private val _cities = mutableStateMapOf<String, City>()
+    val cities : List<City>
+        get() = _cities.values.toList()
     private val _user = mutableStateOf<User?> (null)
     val user : User?
         get() = _user.value
@@ -49,12 +51,22 @@ class MainViewModel (private val db: FBDatabase,
     override fun onUserSignOut() {
     }
     override fun onCityAdded(city: FBCity) {
-        _cities.add(city.toCity())
+        _cities[city.name!!] = city.toCity()
     }
     override fun onCityUpdated(city: FBCity) {
+        _cities.remove(city.name)
+        _cities[city.name!!] = city.toCity()
     }
     override fun onCityRemoved(city: FBCity) {
-        _cities.remove(city.toCity())
+        _cities.remove(city.name)
+    }
+
+    fun loadWeather(name: String) {
+        service.getWeather(name) { apiWeather ->
+            val newCity = _cities[name]!!.copy( weather = apiWeather?.toWeather() )
+            _cities.remove(name)
+            _cities[name] = newCity
+        }
     }
 }
 
@@ -69,6 +81,3 @@ class MainViewModelFactory(private val db : FBDatabase, private val service : We
 }
 
 
-private fun getCities() = List(7) { i ->
-        City(name = "Cidade $i", weather = "Carregando clima...")
-    }

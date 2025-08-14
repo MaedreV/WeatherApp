@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,8 +64,14 @@ fun MapPage(viewModel: MainViewModel) {
     ) {
         viewModel.cities.forEach {
             if (it.location != null) {
+                LaunchedEffect(it.name) {
+                    if (it.weather == null) {
+                        viewModel.loadWeather(it.name)
+                    }
+                }
                 Marker( state = MarkerState(position = it.location),
-                    title = it.name, snippet = "${it.location}")
+                    title = it.name,
+                    snippet = it.weather?.desc?:"Carregando...")
             }
         }
         Marker(
