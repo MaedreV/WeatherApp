@@ -86,8 +86,21 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.3.0")
 // Google maps for compose
     implementation("com.google.maps.android:maps-compose:2.8.0")
-
-    //retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("io.coil-kt:coil-compose:2.5.0") // coil
+    implementation("com.squareup.picasso:picasso:2.8")
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("org.jetbrains:annotations:23.0.0")
+
+        eachDependency {
+            if (requested.group == "com.intellij" && requested.name == "annotations") {
+                useTarget("org.jetbrains:annotations:23.0.0")
+            }
+        }
+    }
 }
