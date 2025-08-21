@@ -24,7 +24,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -57,22 +59,31 @@ fun HomePage(viewModel: MainViewModel) {
                 )
                 Column {
                     Spacer(modifier = Modifier.size(12.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
                             text = viewModel.city?.name ?: "Selecione uma cidade...",
-                            fontSize = 28.sp)
-                        Spacer(modifier = Modifier.size(8.dp))
-                        val icon: ImageVector = if (viewModel.city!!.isMonitored)
-                            Icons.Filled.Star else Icons.Outlined.Star
+                            fontSize = 28.sp
+                        )
+                        Spacer(modifier = Modifier.size(12.dp))
+                        val icon = if (viewModel.city!!.isMonitored) {
+                            Icons.Filled.Notifications
+                        } else {
+                            Icons.Outlined.Notifications
+                        }
+
                         Icon(
                             imageVector = icon, contentDescription = "Monitorada?",
                             modifier = Modifier.size(32.dp)
                                 .clickable(enabled = viewModel.city != null) {
                                     viewModel.update(
                                         viewModel.city!!.copy(
-                                            isMonitored = !viewModel.city!!.isMonitored)
+                                            isMonitored = !viewModel.city!!.isMonitored
+                                        )
                                     )
-                                })
+                                }
+                        )
                     }
                     Spacer(modifier = Modifier.size(12.dp))
                     Text(text = viewModel.city?.weather?.desc ?: "...", fontSize = 22.sp)

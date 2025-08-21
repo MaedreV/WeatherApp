@@ -37,7 +37,9 @@ import androidx.compose.ui.unit.sp
 import com.weatherapp.model.City
 import com.weatherapp.ui.theme.WeatherAppTheme
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -97,21 +99,27 @@ fun CityItem(
         )
         Spacer(modifier = Modifier.size(12.dp))
         Column(modifier = modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
-                    modifier = Modifier,
                     text = city.name,
-                    fontSize = 24.sp
+                    fontSize = 22.sp,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
-                Spacer(modifier = Modifier.size(8.dp))
-                val icon: ImageVector = if (city.isMonitored)
-                    Icons.Filled.Star else Icons.Outlined.Star
+                val monitorIcon = if (city.isMonitored) {
+                    Icons.Filled.Notifications
+                } else {
+                    Icons.Outlined.Notifications }
                 Icon(
-                    imageVector = icon,
-                    contentDescription = "Monitorada?",
+                    imageVector = monitorIcon,
+                    contentDescription = if (city.isMonitored) "Monitorada" else "Não monitorada",
                     modifier = Modifier.size(24.dp)
                 )
             }
+            Spacer(modifier = Modifier.size(4.dp))
             Text(
                 modifier = Modifier,
                 text = city.weather?.desc ?: "carregando...",
