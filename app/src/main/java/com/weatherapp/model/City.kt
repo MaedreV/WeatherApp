@@ -5,6 +5,7 @@ data class City (
     val name : String,
     var weather: Weather? = null,
     val location: LatLng? = null,
-    var forecast: List<Forecast>? = null
-
+    var forecast: List<Forecast>? = null,
+    val isMonitored: Boolean = false,
+    var salt: Long? = null
 )

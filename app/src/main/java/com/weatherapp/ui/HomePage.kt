@@ -1,6 +1,7 @@
 package com.weatherapp.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,16 +24,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
 import com.weatherapp.R
+import com.weatherapp.ui.nav.BottomNavItem.HomeButton.icon
 
 @Composable
 fun HomePage(viewModel: MainViewModel) {
     Column {
         if (viewModel.city == null) {
-            Column(  modifier = Modifier.fillMaxSize()
-                .background(Color.Blue).wrapContentSize(Alignment.Center)
+            Column(
+                modifier = Modifier.fillMaxSize()
+                    .background(Color.Blue).wrapContentSize(Alignment.Center)
             ) {
                 Text(
                     text = "Selecione uma cidade!",
@@ -51,14 +57,27 @@ fun HomePage(viewModel: MainViewModel) {
                 )
                 Column {
                     Spacer(modifier = Modifier.size(12.dp))
-                    Text( text = viewModel.city?.name ?: "Selecione uma cidade...",
-                        fontSize = 28.sp )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = viewModel.city?.name ?: "Selecione uma cidade...",
+                            fontSize = 28.sp)
+                        Spacer(modifier = Modifier.size(8.dp))
+                        val icon: ImageVector = if (viewModel.city!!.isMonitored)
+                            Icons.Filled.Star else Icons.Outlined.Star
+                        Icon(
+                            imageVector = icon, contentDescription = "Monitorada?",
+                            modifier = Modifier.size(32.dp)
+                                .clickable(enabled = viewModel.city != null) {
+                                    viewModel.update(
+                                        viewModel.city!!.copy(
+                                            isMonitored = !viewModel.city!!.isMonitored)
+                                    )
+                                })
+                    }
                     Spacer(modifier = Modifier.size(12.dp))
-                    Text( text = viewModel.city?.weather?.desc ?: "...",
-                        fontSize = 22.sp )
+                    Text(text = viewModel.city?.weather?.desc ?: "...", fontSize = 22.sp)
                     Spacer(modifier = Modifier.size(12.dp))
-                    Text( text = "Temp: " + viewModel.city?.weather?.temp + "℃",
-                        fontSize = 22.sp )
+                    Text(text = "Temp: " + viewModel.city?.weather?.temp + "℃", fontSize = 22.sp)
                 }
             }
             LaunchedEffect(viewModel.city!!.name) {
@@ -76,5 +95,5 @@ fun HomePage(viewModel: MainViewModel) {
                 }
             }
         }
-    }
-}
+    }}
+
