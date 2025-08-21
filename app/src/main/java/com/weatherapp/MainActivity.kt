@@ -46,6 +46,8 @@ import com.weatherapp.df.fb.FBDatabase
 import com.weatherapp.monitor.ForecastMonitor
 import com.weatherapp.ui.nav.Route
 import androidx.core.util.Consumer
+import com.weatherapp.db.local.LocalDatabase
+import com.weatherapp.repo.Repository
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,14 +58,21 @@ class MainActivity : ComponentActivity() {
         setContent {
 
 
-
-
+            val user = Firebase.auth.currentUser
+            val uid = user?.uid ?: "visitante"
+            val localDB = remember { LocalDatabase(this, "weatherapp_localDB_$uid") }
             val fbDB = remember { FBDatabase() }
+
+            val repository = remember {
+                Repository(fbDB, localDB)
+            }
+
             val weatherService = remember { WeatherService() }
             val monitor = remember { ForecastMonitor(this) }
             val viewModel : MainViewModel = viewModel(
-                factory = MainViewModelFactory(fbDB, weatherService, monitor)
+                factory = MainViewModelFactory(repository, weatherService, monitor)
             )
+
 
 
             DisposableEffect(Unit) {
